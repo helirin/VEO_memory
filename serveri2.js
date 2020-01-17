@@ -41,12 +41,7 @@ const server = http.createServer((req, res) => {
         });
         return;
     }
-   /* else if (url === '/favicon.ico') {
-       fs.readFile('./favicon.ico', (err, data) => {    //tämä osa ei toimi
-         res.write(data);
-         res.end();
-       });
-    }*/
+   
     //jos mennään sivulle, jota ei ole
     console.log(`${url} not found`);
     res.write(`

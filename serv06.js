@@ -1,8 +1,5 @@
-//Teht. Lisää Delete-nappi, jolla voi poistaa noten. (input type=number name="index")
-//->tee uusi form html:ään 
-// Käsittele /delete-note POST pyyntö
-//->
-//- notes.splice(index, 1)
+//Tehdään tyylitiedosto, tyyli napeille
+
 const http = require('http');
 const fs = require('fs');
 
@@ -16,29 +13,32 @@ const server = http.createServer((req, res) => {
     if (url === '/') {
         res.write(`
         <html>
-        <head><title>MemoApp</title></head>
+        <head><title>MemoApp</title>
+        <meta http-equiv="Content-Type", content="text/html;charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        </head>
         <body>`);
         //haetaan laatikkoon kirjoitetut arvot
         notes.forEach((value, index) => {
-            res.write(`<div>note:${value}, index: ${index}</div>`);
+            res.write(`<div>note:${value}, index: ${index}
+            <form action="delete-note" method="POST">          
+            <input type="hidden" name="index" value="${index}">
+            <button type="submit" class="delete_button">Delete</button> 
+        </form></div>`)
         });
 
         res.write(`<form action="add-note" method="POST">
                 <input type="text" name="note">
-                <button type="submit">Add note</button>
+                <button type="submit" class="add_button">Add note</button>
             </form>
-            
-            <form action="delete-note" method="POST">          
-                <input type="number" name="index">
-                <button type="submit">Delete note</button> 
-            </form>
-        </body>
-        </html>
+          
         `);
         res.statusCode = 200; //Ok
         res.end();
         return;
-    } else if (url === '/add-note') {
+    } 
+    //lomakkeen tekstin käsittely
+    else if (url === '/add-note') {
         console.log('/add-note');
         const chunks = [];
         req.on('data', (chunk) => {
@@ -46,7 +46,8 @@ const server = http.createServer((req, res) => {
         });
         req.on('end', () => {
             const body = Buffer.concat(chunks).toString();
-            const note = body.split('=')[1];
+            const decoded_body =decodeURIComponent(body);   //utf-8 koodauksesta
+            const note = decoded_body.split('=')[1];         //muutos
             notes.push(note);
             res.statusCode = 303; //Redirect
             res.setHeader('Location', '/');
@@ -69,7 +70,8 @@ const server = http.createServer((req, res) => {
         res.end();
     });
     return;
-    //käsittely päättyy
+    //poiston käsittely päättyy
+    //ikonin käsittely
     } else if (url === '/favicon.ico') {
         fs.readFile('./favicon.ico', (err, data) => {
             res.write(data);
@@ -77,7 +79,14 @@ const server = http.createServer((req, res) => {
         });
         return;
     }
-
+   //käsittelijä tyylitiedostolle
+   else if (url === '/style.css') {
+        fs.readFile('./style.css', (err, data) => {
+            res.write(data);
+            res.end();
+        });
+        return;
+    }
     console.log(`${url} not found`);
     res.write(`
     <html>

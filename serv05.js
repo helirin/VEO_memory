@@ -1,8 +1,8 @@
-//Teht. Lisää Delete-nappi, jolla voi poistaa noten. (input type=number name="index")
-//->tee uusi form html:ään 
-// Käsittele /delete-note POST pyyntö
-//->
-//- notes.splice(index, 1)
+//Teht. Lisää Delete-nappi jokaisen tekstinpätkän viereen
+//Lisää forEach silmukassa formi, jossa delete nappi
+//-intput type="hidden"value="$(index)""
+//encoding 8, jotta äät käsitellään oikein
+//<meta http-equiv="Content-Type", content="text/html;charset=UTF-8">
 const http = require('http');
 const fs = require('fs');
 
@@ -16,24 +16,24 @@ const server = http.createServer((req, res) => {
     if (url === '/') {
         res.write(`
         <html>
-        <head><title>MemoApp</title></head>
+        <head><title>MemoApp</title>
+        <meta http-equiv="Content-Type", content="text/html;charset=UTF-8">
+        </head>
         <body>`);
         //haetaan laatikkoon kirjoitetut arvot
         notes.forEach((value, index) => {
-            res.write(`<div>note:${value}, index: ${index}</div>`);
+            res.write(`<div>note:${value}, index: ${index}</div>
+            <form action="delete-note" method="POST">          
+            <input type="hidden" name="index" value="${index}">
+            <button type="submit">Delete</button> 
+        </form>`)
         });
 
         res.write(`<form action="add-note" method="POST">
                 <input type="text" name="note">
                 <button type="submit">Add note</button>
             </form>
-            
-            <form action="delete-note" method="POST">          
-                <input type="number" name="index">
-                <button type="submit">Delete note</button> 
-            </form>
-        </body>
-        </html>
+          
         `);
         res.statusCode = 200; //Ok
         res.end();
@@ -46,7 +46,8 @@ const server = http.createServer((req, res) => {
         });
         req.on('end', () => {
             const body = Buffer.concat(chunks).toString();
-            const note = body.split('=')[1];
+            const decoded_body =decodeURIComponent(body);   //utf-8 koodauksesta
+            const note = decoded_body.split('=')[1];         //muutos
             notes.push(note);
             res.statusCode = 303; //Redirect
             res.setHeader('Location', '/');

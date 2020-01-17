@@ -1,0 +1,22 @@
+.delete_button{
+    background-color: red;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    border: none;
+    font-size: 16px;
+    margin: 5px;
+}
+.add_button{
+    background-color: greenyellow;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    border: none;
+    font-size: 16px;
+    margin: 5px;
+}
+
+form{
+    display: inline;
+}
