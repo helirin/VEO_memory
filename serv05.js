@@ -47,7 +47,7 @@ const server = http.createServer((req, res) => {
         req.on('end', () => {
             const body = Buffer.concat(chunks).toString();
             const decoded_body =decodeURIComponent(body);   //utf-8 koodauksesta
-            const note = decoded_body.split('=')[1];         //muutos
+            const note = decoded_body.split('=')[1];         //pilkotaan
             notes.push(note);
             res.statusCode = 303; //Redirect
             res.setHeader('Location', '/');

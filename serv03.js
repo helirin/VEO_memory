@@ -1,15 +1,15 @@
 //Teht. Lisää Delete-nappi, jolla voi poistaa noten. (input type=number name="index")
 // Käsittele /delete-note POST pyyntö
-//- notes.splice(index, 1)
+//notes.splice(index, 1)
 const http = require('http');
-const fs = require('fs');
+const fs = require('fs');            //tarvitaan tiedostojen lukemiseen
 
-const notes = [];
+const notes = [];                    
 
 const server = http.createServer((req, res) => {
     const url = req.url;
     const method = req.method;
-    console.log(`HTTP request received: url=${url} , method=${method}`);
+    console.log(`HTTP request received: url=${url} , method=${method}`);  //tulostus palvelimelle
 
     if (url === '/') {
         res.write(`
@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
         res.write(`<form action="add-note" method="POST">
                 <input type="text" name="note">
                 <button type="submit">Add note</button>
-                <input type="button" onclick="alert('Hello World!')" value="Delete"> 
+                <input type="button" onclick="alert('Ei toimi viel')" value="Delete"> 
             </form>
         </body>
         </html>

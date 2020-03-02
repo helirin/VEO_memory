@@ -1,8 +1,8 @@
 //Teht. Lisää Delete-nappi, jolla voi poistaa noten. (input type=number name="index")
 //->tee uusi form html:ään 
 // Käsittele /delete-note POST pyyntö
-//->
-//- notes.splice(index, 1)
+//-> notes.splice(index, 1)
+
 const http = require('http');
 const fs = require('fs');
 
@@ -45,7 +45,7 @@ const server = http.createServer((req, res) => {
             chunks.push(chunk);
         });
         req.on('end', () => {
-            const body = Buffer.concat(chunks).toString();
+            const body = Buffer.concat(chunks).toString();  //lomakkeen lähettämä data merkkijonoksi
             const note = body.split('=')[1];
             notes.push(note);
             res.statusCode = 303; //Redirect
@@ -57,14 +57,15 @@ const server = http.createServer((req, res) => {
 } else if (url === '/delete-note') {
     console.log('/delete-note');
     const chunks = [];
-    req.on('data', (chunk) => {       //Kuunnellaan
+    req.on('data', (chunk) => {                      //Kuunnellaan
         chunks.push(chunk);
     });
     req.on('end', () => {
         const body = Buffer.concat(chunks).toString(); 
-        const index = body.split('=')[1];
-        notes.splice(index,1);            //poistetaan indexin kohdasta 1 alkio
-        res.statusCode = 303; //Redirect
+        const index = parseInt(body.split('=')[1]);     //indeksi numeroksi
+        console.log("indeksi ", index);                 //indeksin tarkistus
+        notes.splice(index,1);                          //poistetaan annetun indexin kohdasta 1 alkio
+        res.statusCode = 303;                           //Redirect
         res.setHeader('Location', '/');
         res.end();
     });

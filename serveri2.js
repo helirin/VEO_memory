@@ -6,7 +6,7 @@ const server = http.createServer((req, res) => {
     //console.log(req);
     const url = req.url;
     const method = req.method;
-    console.log(`HTTP request received: url=${url}, method=${method}`); //ei tavalliset hipsut
+    console.log(`HTTP request received: url=${url}, method=${method}`); //ei tavalliset heittomerkit
 
     if(url === '/'){
         res.write(`
@@ -32,10 +32,10 @@ const server = http.createServer((req, res) => {
             chunks.push(chunk);
         });
 
-        req.on('end', () => {          //kuuntelija
-            const body = Buffer.concat(chunks); //yhdistää datapalat
+        req.on('end', () => {                          //kuuntelija
+            const body = Buffer.concat(chunks);        //yhdistää datapalat
             console.log(body);
-            res.statusCode = 303;     //redirect
+            res.statusCode = 303;                    //redirect
             res.setHeader('Location', '/');
             res.end();
         });

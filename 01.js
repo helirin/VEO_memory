@@ -1,11 +1,13 @@
 const http = require('http');
-
+//request (req), tuleva viesti/pyyntö
+//response (res), serverin vastaus
+//serverin luominen
 const server = http.createServer((req, res) => {
     //console.log(req);
     const url = req.url;
     const method = req.method;
-    console.log(`HTTP request received: url=${url}, method=${method}`); //ei tavalliset hipsut
-
+    console.log(`HTTP request received: url=${url}, method=${method}`); //ei tavalliset heittomerkit
+    //jos ollaan juurikansiossa, kirjoitetaan vastauksena lomake html-koodilla
     if(url === '/'){
         res.write(`
         <html>
@@ -23,15 +25,16 @@ const server = http.createServer((req, res) => {
         res.end();
         return;                 //return tai else
     }
+    //jos on painettu add-note-nappulaa, työnnetään data-lohkot taulukkoon
     else if(url === '/add-note'){
         console.log('/add-note');
         const chunks = [];
-        req.on('data', (chunk) => {
+        req.on('data', (chunk) => {         //otetaan data
             chunks.push(chunk);
         });
 
-        req.on('end', () => {          //kuuntelija
-            const body = Buffer.concat(chunks); //yhdistää datapalat
+        req.on('end', () => {                   //kuuntelija
+            const body = Buffer.concat(chunks); //yhdistetään datapalat buffer-luokan avulla
             console.log(body);
             res.statusCode = 303;     //redirect
             res.setHeader('Location', '/');
